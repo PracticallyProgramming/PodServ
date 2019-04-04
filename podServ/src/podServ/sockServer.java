@@ -47,6 +47,15 @@ public class sockServer implements Runnable {
 	static double proteinTotal = 0;
 	static double vegTotal = 0;
 	static double bakeTotal = 0;
+	
+	static double proteinTemp = 0;
+	static double vegTemp = 0;
+	static double bakeTemp = 0;
+	
+	static double truck1;
+	static double truck2;
+	static double truck3;
+	
 	DecimalFormat totalFormat = new DecimalFormat("#0.00");
 	
 	sockServer(Socket csocket, String ip){
@@ -121,7 +130,7 @@ public class sockServer implements Runnable {
 	//to the given key, and calls the appropriate function to change the user's current
 	//amount of the item.
 	static synchronized void hashOperation(char type, String key, int val){
-		
+		/*
 		switch (type){
 		
 			//Chicken
@@ -177,6 +186,7 @@ public class sockServer implements Runnable {
 				}
 			break;
 		}
+		*/
 	}
 	
 	//Individual thread code.
@@ -224,7 +234,7 @@ public class sockServer implements Runnable {
 					
 					clientString = rstream.readLine();
 					
-					//Reads inputs from client in the form of OPERATION|username|ITEM|±|VALUE
+					//Reads inputs from client in the form of OPERATION|username|ITEM|Â±|VALUE
 					if(clientString.length() > 128) {
 						
 						sessionDone = true;
@@ -235,8 +245,6 @@ public class sockServer implements Runnable {
 						
 						sessionDone = true;
 					
-						//TODO: Probably change this system to accept the whole user cart at once.
-						//TODO: Create an order class that stores the purchased items as an order.
 					}else if(clientString.contains("TRANSACTION")) {
 						
 						String tokens[] = clientString.split("\\|");
@@ -245,57 +253,54 @@ public class sockServer implements Runnable {
 							amount *= -1;
 						if(users.containsKey(tokens[1]) == true) {
 							
-							if(tokens[2].contains("CHICKEN")) {
+							//Order is MUFFIN|SALMON|ASPARAGUS|CHICKEN|SPROUTS|BREAD
+							int c = Integer.parseInt(tokens[6]);
+							proteinTemp += (4.99 * c);
+							int s = Integer.parseInt(tokens[4]);
+							proteinTemp += (10.99 * s);
+							int a = Integer.parseInt(tokens[5]);
+							vegTemp += (2.99 * a);
+							int bs = Integer.parseInt(tokens[7]);
+							vegTemp += (2.50 * bs);
+							int b = Integer.parseInt(tokens[8]);
+							bakeTemp += (1.99 * b);
+							int m = Integer.parseInt(tokens[3]);
+							bakeTemp += (3.69 * m);
+							int t = Integer.parseInt(tokens[2]);
+							switch(t) {
+							
+								case 1:
+									truck1 += proteinTemp + vegTemp + bakeTemp;
+									server.tr1_total.setText("$" + totalFormat.format(truck1));
+									break;
+									
+								case 2:
+									truck2 += proteinTemp + vegTemp + bakeTemp;
+									server.tr2_total.setText("$" + totalFormat.format(truck2));
+									break;
 								
-								hashOperation('C', tokens[1], amount);
-								proteinTotal += (4.99 * amount);
-								server.protein_total.setText("$" + totalFormat.format(proteinTotal));
-								server.t5.setText(String.valueOf("$" + totalFormat.format(proteinTotal + vegTotal + bakeTotal)));
-								//TODO: Color this text. No time right now.
-								server.transaction_log.appendText("CHICKEN" + tokens[3] + tokens[4]);
-								server.transaction_log.appendText("|| NEW VALUE: " + String.valueOf(users.get(tokens[1]).cNum) + newline);
-								
-							}else if(tokens[2].contains("SALMON")) {
-								
-								hashOperation('S', tokens[1], amount);
-								proteinTotal += (10.99 * amount);
-								server.protein_total.setText("$" + totalFormat.format(proteinTotal));
-								server.t5.setText(String.valueOf("$" + totalFormat.format(proteinTotal + vegTotal + bakeTotal)));								server.transaction_log.appendText("SALMON" + tokens[3] + tokens[4]);
-								server.transaction_log.appendText("|| NEW VALUE: " + String.valueOf(users.get(tokens[1]).sNum) + newline);
-								
-							}else if(tokens[2].contains("ASPARAGUS")) {
-								
-								hashOperation('A', tokens[1], amount);
-								vegTotal += (2.99 * amount);
-								server.greens_total.setText("$" + totalFormat.format(vegTotal));
-								server.t5.setText(String.valueOf("$" + totalFormat.format(proteinTotal + vegTotal + bakeTotal)));								server.transaction_log.appendText("ASPARAGUS" + tokens[3] + tokens[4]);
-								server.transaction_log.appendText("|| NEW VALUE: " + String.valueOf(users.get(tokens[1]).aNum) + newline);
-								
-							}else if(tokens[2].contains("SPROUTS")) {
-								
-								hashOperation('R', tokens[1], amount);
-								vegTotal += (2.50 * amount);
-								server.greens_total.setText("$" + totalFormat.format(vegTotal));
-								server.t5.setText(String.valueOf("$" + totalFormat.format(proteinTotal + vegTotal + bakeTotal)));								server.transaction_log.appendText("SPROUTS" + tokens[3] + tokens[4]);
-								server.transaction_log.appendText("|| NEW VALUE: " + String.valueOf(users.get(tokens[1]).bsNum) + newline);
-								
-							}else if(tokens[2].contains("BREAD")) {
-								
-								hashOperation('B', tokens[1], amount);
-								bakeTotal += (1.99 * amount);
-								server.bakery_total.setText("$" + totalFormat.format(bakeTotal));
-								server.t5.setText(String.valueOf("$" + totalFormat.format(proteinTotal + vegTotal + bakeTotal)));								server.transaction_log.appendText("BREAD" + tokens[3] + tokens[4]);
-								server.transaction_log.appendText("|| NEW VALUE: " + String.valueOf(users.get(tokens[1]).bNum) + newline);
-								
-							}else if(tokens[2].contains("MUFFIN")) {
-								
-								hashOperation('M', tokens[1], amount);
-								bakeTotal += (3.69 * amount);
-								server.bakery_total.setText("$" + totalFormat.format(bakeTotal));
-								server.t5.setText(String.valueOf("$" + totalFormat.format(proteinTotal + vegTotal + bakeTotal)));								server.transaction_log.appendText("MUFFIN" + tokens[3] + tokens[4]);
-								server.transaction_log.appendText("|| NEW VALUE: " + String.valueOf(users.get(tokens[1]).mNum) + newline);
-								
+								case 3:
+									truck3 += proteinTemp + vegTemp + bakeTemp;
+									server.tr3_total.setText("$" + totalFormat.format(truck3));
+									break;
+							
 							}
+							proteinTotal += proteinTemp;
+							server.protein_total.setText("$" + totalFormat.format(proteinTotal));
+							vegTotal += vegTemp;
+							server.greens_total.setText("$" + totalFormat.format(vegTotal));
+							bakeTotal += bakeTemp;
+							server.bakery_total.setText("$" + totalFormat.format(bakeTotal));
+							proteinTemp = 0;
+							vegTemp = 0;
+							bakeTemp = 0;
+							
+							server.t5.setText(String.valueOf("$" + totalFormat.format(proteinTotal + vegTotal + bakeTotal)));
+							
+							order o = new order(c, s, a, bs, b, m, t);
+							server.transaction_log.appendText("USER: " + tokens[1] + "|CHICKEN: " + tokens[6] + "\nSALMON: " + tokens[4] + "|ASPARAGUS: " + tokens[5] + "\nSPROUTS: " + tokens[7] + "|BREAD: " + tokens[8] + "\nMUFFIN: " + tokens[3] + "|TRUCK: " + tokens[2] + "\n");
+							(users.get(tokens[1])).addOrder(o);
+							(users.get(tokens[1])).displayOrders();
 							
 						}
 						
