@@ -63,6 +63,9 @@ public class server extends Application {
 	static Text protein_total;
 	static Text greens_total;
 	static Text bakery_total;
+	static Text tr1_total;
+	static Text tr2_total;
+	static Text tr3_total;
 	Stage window;
 	
 	int height = 1000;
@@ -258,19 +261,19 @@ public class server extends Application {
 		
 		VBox truck1 = new VBox();
 		truck1.setAlignment(Pos.CENTER);
-		Text tr1_total = new Text("$" + totalFormat.format(tr1_ttl));
+		/*Text*/ tr1_total = new Text("$" + totalFormat.format(tr1_ttl));
 		tr1_total.setFont(Font.font("Verdana", 20));
 		truck1.getChildren().addAll(tr1, tr1_total);
 		
 		VBox truck2 = new VBox();
 		truck2.setAlignment(Pos.CENTER);
-		Text tr2_total = new Text("$" + totalFormat.format(tr2_ttl));
+		/*Text*/ tr2_total = new Text("$" + totalFormat.format(tr2_ttl));
 		tr2_total.setFont(Font.font("Verdana", 20));
 		truck2.getChildren().addAll(tr2, tr2_total);
 		
 		VBox truck3 = new VBox();
 		truck3.setAlignment(Pos.CENTER);
-		Text tr3_total = new Text("$" + totalFormat.format(tr3_ttl));
+		/*Text*/ tr3_total = new Text("$" + totalFormat.format(tr3_ttl));
 		tr3_total.setFont(Font.font("Verdana", 20));
 		truck3.getChildren().addAll(tr3, tr3_total);
 		
