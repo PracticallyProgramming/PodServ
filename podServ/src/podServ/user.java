@@ -2,17 +2,15 @@
 //Implementation of user class, which represents a user of the system, including that user's cart.
 package podServ;
 
+import java.util.Vector;
+import java.util.Collections;
+
 public class user {
 
 	private static String uname;
 	private static String password;
-	int cNum;
-	int sNum;
-	int aNum;
-	int bsNum;
-	int bNum;
-	int mNum;
 	
+	public Vector<order> orders= new Vector<order>();
 	
 	user(String u, String p){
 		
@@ -43,48 +41,27 @@ public class user {
 		password = p;
 		
 	}
-
-	//Functions to modify values of the items in the user's cart.
-	//TODO: Make functions return something instead of just doing nothing when the operation is invalid.
-	void changeC(int val) {
+	
+	void addOrder(order o) {
 		
-		if(cNum + val >= 0)
-			cNum += val;
+		orders.addElement(o);
 		
 	}
 	
-	void changeS(int val) {
+	void displayOrders() {
 		
-		if(sNum + val >= 0)
-			sNum += val;
-		
-	}
-	
-	void changeA(int val) {
-		
-		if(aNum + val >= 0)
-			aNum += val;
+		for(int i = 0; i < orders.size(); i++) {
+			
+			order temp = orders.get(i);
+			temp.display();
+			
+		}
 		
 	}
 	
-	void changeBS(int val) {
+	Vector<order> getOrders(){
 		
-		if(bsNum + val >= 0)
-			bsNum += val;
-		
-	}
-	
-	void changeB(int val) {
-		
-		if(bNum + val >= 0)
-			bNum += val;
-		
-	}
-	
-	void changeM(int val) {
-		
-		if(mNum + val >= 0)
-			mNum += val;
+		return orders;
 		
 	}
 }
