@@ -58,6 +58,8 @@ public class sockServer implements Runnable {
 	
 	DecimalFormat totalFormat = new DecimalFormat("#0.00");
 	
+	fileIO wrfile = new fileIO();
+	
 	sockServer(Socket csocket, String ip){
 		this.csocket  = csocket;
 		this.ipstring = ip;
@@ -126,69 +128,6 @@ public class sockServer implements Runnable {
 
 	}
 	
-	//Takes a character representing the intended operation, finds the entry corresponding
-	//to the given key, and calls the appropriate function to change the user's current
-	//amount of the item.
-	static synchronized void hashOperation(char type, String key, int val){
-		/*
-		switch (type){
-		
-			//Chicken
-			case 'C':
-				if (users.containsKey(key) == true){
-					
-					users.get(key).changeC(val);
-		        }	
-			break;
-			
-			//Salmon
-			case 'S':
-				if(users.containsKey(key) == true) {
-					
-					users.get(key).changeS(val);
-					
-				}
-			break;
-			
-			//Asparagus
-			case 'A':
-				if(users.containsKey(key) == true) {
-					
-					users.get(key).changeA(val);
-					
-				}
-			break;
-			
-			//Brussels Sprouts
-			case 'R':
-				if(users.containsKey(key) == true) {
-					
-					users.get(key).changeBS(val);
-					
-				}
-			break;
-			
-			//Bread
-			case 'B':
-				if(users.containsKey(key) == true) {
-					
-					users.get(key).changeB(val);
-					
-				}
-			break;
-			
-			//Muffins
-			case 'M':
-				if(users.containsKey(key) == true) {
-					
-					users.get(key).changeM(val);
-					
-				}
-			break;
-		}
-		*/
-	}
-	
 	//Individual thread code.
 	public void run() {
 		
@@ -247,6 +186,7 @@ public class sockServer implements Runnable {
 					
 					}else if(clientString.contains("TRANSACTION")) {
 						
+						wrfile.wrTransactionData(clientString);
 						String tokens[] = clientString.split("\\|");
 						int amount = Integer.parseInt(tokens[4]);
 						if(tokens[3].contains("-"))
@@ -267,6 +207,7 @@ public class sockServer implements Runnable {
 							int m = Integer.parseInt(tokens[3]);
 							bakeTemp += (3.69 * m);
 							int t = Integer.parseInt(tokens[2]);
+							int r = Integer.parseInt(tokens[9]);
 							switch(t) {
 							
 								case 1:
@@ -297,10 +238,28 @@ public class sockServer implements Runnable {
 							
 							server.t5.setText(String.valueOf("$" + totalFormat.format(proteinTotal + vegTotal + bakeTotal)));
 							
-							order o = new order(c, s, a, bs, b, m, t);
-							server.transaction_log.appendText("USER: " + tokens[1] + "|CHICKEN: " + tokens[6] + "\nSALMON: " + tokens[4] + "|ASPARAGUS: " + tokens[5] + "\nSPROUTS: " + tokens[7] + "|BREAD: " + tokens[8] + "\nMUFFIN: " + tokens[3] + "|TRUCK: " + tokens[2] + "\n");
+							order o = new order(c, s, a, bs, b, m, t, r);
+							server.transaction_log.appendText("USER: " + tokens[1] + "|CHICKEN: " + tokens[6] + "\nSALMON: " + tokens[4] + "|ASPARAGUS: " + tokens[5] + "\nSPROUTS: " + tokens[7] + "|BREAD: " + tokens[8] + "\nMUFFIN: " + tokens[3] + "|TRUCK: " + tokens[2] + "|TYPE: " + tokens[9] + "\n");
 							(users.get(tokens[1])).addOrder(o);
-							(users.get(tokens[1])).displayOrders();
+							//(users.get(tokens[1])).displayOrders();
+							
+						}
+						
+					} else if(clientString.contains("LOGIN")) {
+						
+						String tokens[] = clientString.split("\\|");
+						if(users.containsKey(tokens[1]) == true) {
+							
+							if((users.get(tokens[1])).getPassword() == tokens[2]) {
+								
+								//Successful login
+								
+							}else {
+								
+								//Bad login
+								pstream.println("Login Failed. Invalid password.");
+								
+							}
 							
 						}
 						
