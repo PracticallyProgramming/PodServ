@@ -11,7 +11,9 @@ public class order {
 	
 	int truck;
 	
-	order(int c, int s, int a, int bs, int b, int m, int t) {
+	int type;
+	
+	order(int c, int s, int a, int bs, int b, int m, int t, int r) {
 		
 		cNum = c;
 		sNum = s;
@@ -20,12 +22,13 @@ public class order {
 		bNum = b;
 		mNum = m;
 		truck = t;
+		type = r;
 		
 	}
 	
 	void display() {
 		
-		server.transaction_log.appendText(cNum + "|" + sNum + "|" + aNum + "|" + bsNum + "|" + bNum + "|" + mNum + "|" + truck);
+		server.transaction_log.appendText(cNum + "|" + sNum + "|" + aNum + "|" + bsNum + "|" + bNum + "|" + mNum + "|" + truck + "|" + type);
 		
 	}
 	
