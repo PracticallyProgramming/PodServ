@@ -75,7 +75,7 @@ public class server extends Application {
 	static int num_user = 0; //number of users
 	double total_profit = 0.00; //total profit
 	DecimalFormat totalFormat = new DecimalFormat("#0.00");
-	
+
 	static TextArea transaction_log = new TextArea();
 	static TextArea users_log = new TextArea();
 	
@@ -212,18 +212,26 @@ public class server extends Application {
 		bottom_sb.getChildren().addAll(t4, t5);
 		
 		sidebar.getChildren().addAll(top_sb, bottom_sb);
-		
+	
+		ScrollPane sp1 = new ScrollPane();
 //		Transaction Log Tracker - right side
 		transaction_log.setPrefWidth(.333*height);
 		transaction_log.setEditable(false);
 		transaction_log.setStyle("-fx-font-weight: bold");
 		transaction_log.setStyle("-fx-border-color: black;" + "-fx-border-width: 3;" + "-fx-background-color: white;");
+		sp1.setContent(transaction_log);
+		sp1.setFitToWidth(true);
+		sp1.setFitToHeight(true);
 		
+		ScrollPane sp2 = new ScrollPane();
 //		User Logged In - center
 		users_log.setPrefWidth(.3*height);
 		users_log.setEditable(false);
 		users_log.setStyle("-fx-font-weight: bold");
 		users_log.setStyle("-fx-border-color: black;" + "-fx-border-width: 3;" + "-fx-background-color: white;");
+		sp2.setContent(users_log);
+		sp2.setFitToWidth(true);
+		sp2.setFitToHeight(true);
 		
 //		Bottom
 		HBox bottom = new HBox();
@@ -357,8 +365,8 @@ public class server extends Application {
 		BorderPane bp = new BorderPane();
 		bp.setTop(navbar);
 		bp.setLeft(sidebar);
-		bp.setRight(transaction_log);
-		bp.setCenter(users_log);
+		bp.setRight(sp1); //CHANGED
+		bp.setCenter(sp2);
 		bp.setBottom(bottom);
 		bp.setStyle("-fx-border-color: black;" + "-fx-border-width: 3;");
 		
@@ -409,4 +417,3 @@ public class server extends Application {
 		
 	}
 
-}
